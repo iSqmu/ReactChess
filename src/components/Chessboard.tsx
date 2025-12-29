@@ -19,7 +19,7 @@ const Chessboard = () => {
 
   const [selectedPiece, setSelectedPiece] = useState<string | null>(null);
   const [turn, setTurn] = useState<'white' | 'black'>('white');
-
+  setTurn('white'); //Temporary
   function insertPiece(cord: string) {
     return initialBoard.find(([c]) => c === cord)?.[1];
   }
