@@ -1,4 +1,6 @@
 import clsx from 'clsx';
+import fillBoard from '@lib/fillBoard';
+import getImageURL from '@lib/image-piece';
 
 const Chessboard = () => {
   const board = [
@@ -12,6 +14,8 @@ const Chessboard = () => {
     ['a1', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1'],
   ];
 
+  let initialBoard = fillBoard();
+
   function createBox() {
     return board.map((row, rowIndex) => {
       return row.map((box, boxIndex) => {
@@ -24,7 +28,11 @@ const Chessboard = () => {
                 : 'bg-sky-200 border-sky-200 hover:border-emerald-400 hover:shadow-emerald-400'
             )}
             key={box}
-          ></div>
+          >
+            {initialBoard.map(([cord, piece]) =>
+              cord === box ? <img src={getImageURL(piece)} alt={piece} /> : null
+            )}
+          </div>
         );
       });
     });
