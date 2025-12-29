@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import fillBoard from '@lib/fillBoard';
 import getImageURL from '@lib/image-piece';
+import { useEffect, useState } from 'react';
 
 const Chessboard = () => {
   const board = [
@@ -16,18 +17,26 @@ const Chessboard = () => {
 
   let initialBoard = fillBoard();
 
+  const [selectedPiece, setSelectedPiece] = useState<string | null>(null);
+
   function createBox() {
     return board.map((row, rowIndex) => {
       return row.map((box, boxIndex) => {
         return (
           <div
             className={clsx(
-              'w-12 h-12 flex items-center justify-center m-0 p-0 cursor-pointer border-4 transition-all duration-200 ease-in-out hover:rounded-lg hover:shadow-2xl hover:scale-110',
+              'w-12 h-12 flex items-center justify-center m-0 p-0 cursor-pointer  transition-all duration-200 ease-in-out hover:rounded-lg hover:shadow-2xl hover:scale-110',
               (boxIndex + rowIndex) % 2 === 1
-                ? 'bg-sky-800 border-sky-800 hover:border-emerald-200 hover:shadow-emerald-200'
-                : 'bg-sky-200 border-sky-200 hover:border-emerald-400 hover:shadow-emerald-400'
+                ? 'bg-sky-800 hover:border-4 border-emerald-200 shadow-emerald-200'
+                : 'bg-sky-200 hover:border-4 border-emerald-400 shadow-emerald-400',
+              selectedPiece === box
+                ? 'rounded-lg scale-110 border-4 border-yellow-500 shadow-2xl'
+                : ''
             )}
             key={box}
+            onClick={() => {
+              setSelectedPiece(box);
+            }}
           >
             {initialBoard.map(([cord, piece]) =>
               cord === box ? <img src={getImageURL(piece)} alt={piece} /> : null
