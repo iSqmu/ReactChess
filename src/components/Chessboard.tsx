@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import fillBoard from '@lib/fillBoard';
 import getImageURL from '@lib/image-piece';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const Chessboard = () => {
   const board = [
