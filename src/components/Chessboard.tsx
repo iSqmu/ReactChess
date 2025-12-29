@@ -18,10 +18,17 @@ const Chessboard = () => {
   let initialBoard = fillBoard();
 
   const [selectedPiece, setSelectedPiece] = useState<string | null>(null);
+  const [turn, setTurn] = useState<'white' | 'black'>('white');
+
+  function insertPiece(cord: string) {
+    return initialBoard.find(([c]) => c === cord)?.[1];
+  }
 
   function createBox() {
     return board.map((row, rowIndex) => {
       return row.map((box, boxIndex) => {
+        const piece = insertPiece(box);
+
         return (
           <div
             className={clsx(
@@ -33,21 +40,37 @@ const Chessboard = () => {
                 ? 'rounded-lg scale-110 border-4 border-yellow-500 shadow-2xl'
                 : ''
             )}
+            data-piece={piece !== undefined ? piece : null}
+            data-color={piece !== undefined ? piece.split('_')[0] : null}
             key={box}
             onClick={() => {
-              setSelectedPiece(box);
+              if (piece?.split('_')[0] === turn) {
+                if (piece !== undefined) {
+                  if (selectedPiece === box) {
+                    setSelectedPiece(null);
+                  } else {
+                    setSelectedPiece(box);
+                  }
+                } else {
+                  setSelectedPiece(null);
+                }
+              }
             }}
           >
-            {initialBoard.map(([cord, piece]) =>
-              cord === box ? <img src={getImageURL(piece)} alt={piece} /> : null
+            {piece !== undefined ? (
+              <img
+                src={getImageURL(piece)}
+                alt={piece}
+                className="w-10 h-10 select-none pointer-events-none"
+              />
+            ) : (
+              <></>
             )}
           </div>
         );
       });
     });
   }
-
-  createBox();
 
   return (
     <>
@@ -74,6 +97,9 @@ const Chessboard = () => {
               </div>
             ))}
           </div>
+        </div>
+        <div className="turn">
+          {turn === 'white' ? "White's Turn" : "Black's Turn"}
         </div>
       </div>
     </>
