@@ -8,6 +8,8 @@ export function useChess() {
   const [selectedBox, setSelectedBox] = useState<Box | null>(null);
   const [currentPlayer, setCurrentPlayer] = useState<Player>('white');
   const [possibleSelect, setPossibleSelect] = useState<Array<string>>([]);
+  const [selectedPiece, setSelectedPiece] = useState<Piece | null>(null);
+  const [canEat, setCanEat] = useState<boolean>(false);
 
   function getPiece(box: Box) {
     const boardBox = initialBoard.board[box as keyof typeof initialBoard.board];
@@ -26,36 +28,44 @@ export function useChess() {
   }
 
   function handleBoxClick(box: Box) {
+    let enemiePieces = Object.keys(board.board).filter(
+      (box) =>
+        board.board[box] !== null && board.board[box][1] !== currentPlayer[0]
+    );
+
     const piece = getPiece(box);
     const pieceColor = getPieceColor(piece);
 
-    if (!piece) {
+    if (!piece && !possibleSelect) {
       return;
-    } else {
+    } else if (piece) {
       if (pieceColor === currentPlayer) {
-        if (piece.includes('pawn') && pieceColor) {
-          setPossibleSelect(PawnMovement(box, pieceColor, Object.keys(board)));
+        if (piece && piece.includes('pawn') && pieceColor) {
+          setCanEat(PawnMovement(box, pieceColor, enemiePieces)[1]);
+          setPossibleSelect(PawnMovement(box, pieceColor, enemiePieces)[0]);
         }
-        setBoard((prev) => {
-          const newBoard = { ...prev };
-          newBoard[box] = null;
-          return newBoard;
-        });
 
         setSelectedBox(box);
+        setSelectedPiece(board.board[box]);
       }
 
       if (selectedBox === box) {
-        setBoard((prev) => {
-          const newBoard = { ...prev };
-          newBoard[box] = piece;
-          newBoard[selectedBox] = null;
-          return newBoard;
-        });
-
         setSelectedBox(null);
-        setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
+        setPossibleSelect([]);
       }
+    } else if (possibleSelect.includes(box) && selectedPiece) {
+      console.log(`Moving ${selectedPiece} to ${box}`);
+
+      setBoard((prevBoard) => {
+        const newBoard = { ...prevBoard };
+        newBoard.board[box] = selectedPiece;
+        newBoard.board[selectedBox] = null;
+        console.log(newBoard.board);
+        return newBoard;
+      });
+      setSelectedBox(null);
+      setPossibleSelect([]);
+      // setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
     }
   }
 

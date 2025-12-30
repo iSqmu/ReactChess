@@ -12,7 +12,7 @@ const Chessboard = () => {
     handleBoxClick,
   } = useChess();
 
-  console.log(board); // temporary
+  // console.log(board); // temporary
 
   const rows = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   const cols = ['8', '7', '6', '5', '4', '3', '2', '1'];
