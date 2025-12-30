@@ -49,6 +49,7 @@ export function useChess() {
         });
 
         setSelectedBox(null);
+        setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white')
       }
     }
   }
