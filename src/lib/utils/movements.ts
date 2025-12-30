@@ -8,6 +8,7 @@ function PawnMovement(
 
   let possibleMoves: Array<string> = [];
   if (color === 'white') {
+    //! FORWARD MOVEMENT
     if (row === 2) {
       if (!boxesWithPieces.includes(`${String.fromCharCode(col)}4`)) {
         possibleMoves.push(`${String.fromCharCode(col)}4`);
@@ -18,22 +19,21 @@ function PawnMovement(
       possibleMoves.push(`${String.fromCharCode(col)}${row + 1}`);
     }
 
-    if (col - 1 >= 97 && col + 1 <= 104) {
-      if (
-        boxesWithPieces.includes(`${String.fromCharCode(col - 1)}${row + 1}`)
-      ) {
-        possibleMoves.push(`${String.fromCharCode(col - 1)}${row + 1}`);
-      }
-
-      if (
-        boxesWithPieces.includes(`${String.fromCharCode(col + 1)}${row + 1}`)
-      ) {
-        possibleMoves.push(`${String.fromCharCode(col + 1)}${row + 1}`);
-      }
+    //! EAT MOVEMENT
+    if (
+      col + 1 <= 104 &&
+      boxesWithPieces.includes(`${String.fromCharCode(col + 1)}${row + 1}`)
+    ) {
+      possibleMoves.push(`${String.fromCharCode(col + 1)}${row + 1}`);
+    } else if (
+      col - 1 >= 97 &&
+      boxesWithPieces.includes(`${String.fromCharCode(col - 1)}${row + 1}`)
+    ) {
+      possibleMoves.push(`${String.fromCharCode(col - 1)}${row + 1}`);
     }
   } else {
   }
   return possibleMoves;
 }
 
-console.log(PawnMovement('a2', 'white', ['a4', 'b3']));
+export { PawnMovement };

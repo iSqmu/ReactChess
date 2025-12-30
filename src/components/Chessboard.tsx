@@ -1,10 +1,16 @@
 import clsx from 'clsx';
 import { useChess } from '@lib/hooks/useChess';
-import getImageURL from '@lib/image-piece';
+import getImageURL from '@lib/utils/image-piece';
 
 const Chessboard = () => {
-  const { board, selectedBox, currentPlayer, getPiece, handleBoxClick } =
-    useChess();
+  const {
+    board,
+    selectedBox,
+    currentPlayer,
+    possibleSelect,
+    getPiece,
+    handleBoxClick,
+  } = useChess();
 
   console.log(board); // temporary
 
@@ -44,10 +50,13 @@ const Chessboard = () => {
                   isDark ? 'bg-sky-800' : 'bg-sky-200',
                   'hover:scale-110 hover:rounded-lg hover:shadow-2xl',
                   isSelected &&
-                    'scale-110 rounded-lg border-4 border-amber-400 shadow-2xl'
+                    'scale-110 rounded-lg border-4 border-green-500/70 shadow-2xl',
+                  possibleSelect.includes(box) &&
+                    'ring-4 ring-green-500/70 ring-inset scale-110'
                 )}
                 onClick={() => handleBoxClick(box)}
               >
+                {possibleSelect.includes(box) && <span></span>}
                 {piece && <img src={getImageURL(piece)} alt={piece} />}
               </div>
             );

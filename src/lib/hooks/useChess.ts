@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { PawnMovement } from '@lib/utils/movements';
 import type { Piece, Box, Board, Player } from './types';
 import initialBoard from '@lib/constants/initialBoard.json';
 
@@ -6,6 +7,7 @@ export function useChess() {
   const [board, setBoard] = useState<Board>(initialBoard as unknown as Board);
   const [selectedBox, setSelectedBox] = useState<Box | null>(null);
   const [currentPlayer, setCurrentPlayer] = useState<Player>('white');
+  const [possibleSelect, setPossibleSelect] = useState<Array<string>>([]);
 
   function getPiece(box: Box) {
     const boardBox = initialBoard.board[box as keyof typeof initialBoard.board];
@@ -31,6 +33,9 @@ export function useChess() {
       return;
     } else {
       if (pieceColor === currentPlayer) {
+        if (piece.includes('pawn') && pieceColor) {
+          setPossibleSelect(PawnMovement(box, pieceColor, Object.keys(board)));
+        }
         setBoard((prev) => {
           const newBoard = { ...prev };
           newBoard[box] = null;
@@ -49,7 +54,7 @@ export function useChess() {
         });
 
         setSelectedBox(null);
-        setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white')
+        setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
       }
     }
   }
@@ -58,6 +63,7 @@ export function useChess() {
     board,
     selectedBox,
     currentPlayer,
+    possibleSelect,
     getPiece,
     handleBoxClick,
     setBoard,
