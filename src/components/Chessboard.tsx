@@ -4,7 +4,9 @@ import getImageURL from '@lib/image-piece';
 
 const Chessboard = () => {
   const { board, selectedBox, currentPlayer, getPiece, handleBoxClick } =
-  useChess();
+    useChess();
+
+  console.log(board); // temporary
 
   const rows = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   const cols = ['8', '7', '6', '5', '4', '3', '2', '1'];
