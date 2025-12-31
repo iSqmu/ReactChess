@@ -4,15 +4,13 @@ import getImageURL from '@lib/utils/image-piece';
 
 const Chessboard = () => {
   const {
-    board,
+    // board, //-> temporary
     selectedBox,
     currentPlayer,
     possibleSelect,
     getPiece,
     handleBoxClick,
   } = useChess();
-
-  // console.log(board); // temporary
 
   const rows = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   const cols = ['8', '7', '6', '5', '4', '3', '2', '1'];
