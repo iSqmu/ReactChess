@@ -1,69 +1,73 @@
+import type { Piece } from '../hooks/types';
+
 function PawnMovement(
   currentPos: string,
   color: 'white' | 'black',
-  boxesWithPieces: Array<string>
-) : [string[], boolean] {
+  board: Record<string, Piece>
+): string[] {
   const row = Number(currentPos[1]); // Y coordinate as a number
   const col = currentPos.charCodeAt(0); // X coordinate as ASCII code
+  const direction = color === 'white' ? 1 : -1;
+  const startAt = color === 'white' ? 2 : 7;
+  const forwardOne = row + direction;
+  const forwardTwo = row + 2 * direction;
 
-  let possibleMoves: Array<string> = [];
+  let possibleMoves: string[] = [];
   let canEat = false;
-  if (color === 'white') {
-    //! FORWARD MOVEMENT
-    if (row === 2) {
-      if (!boxesWithPieces.includes(`${String.fromCharCode(col)}4`)) {
-        possibleMoves.push(`${String.fromCharCode(col)}4`);
-      }
-    }
 
-    if (!boxesWithPieces.includes(`${String.fromCharCode(col)}${row + 1}`)) {
-      possibleMoves.push(`${String.fromCharCode(col)}${row + 1}`);
-    }
-
-    //! EAT MOVEMENT
-    if (col + 1 <= 104 || col - 1 >= 97) {
-      if (
-        boxesWithPieces.includes(`${String.fromCharCode(col + 1)}${row + 1}`)
-      ) {
-        possibleMoves.push(`${String.fromCharCode(col + 1)}${row + 1}`);
-        canEat = true;
-      }
-      if (
-        boxesWithPieces.includes(`${String.fromCharCode(col - 1)}${row + 1}`)
-      ) {
-        possibleMoves.push(`${String.fromCharCode(col - 1)}${row + 1}`);
-        canEat = true;
-      }
-    }
-  } else {
-    //! FORWARD MOVEMENT
-    if (row === 7) {
-      if (!boxesWithPieces.includes(`${String.fromCharCode(col)}5`)) {
-        possibleMoves.push(`${String.fromCharCode(col)}5`);
-      }
-    }
-
-    if (!boxesWithPieces.includes(`${String.fromCharCode(col)}${row - 1}`)) {
-      possibleMoves.push(`${String.fromCharCode(col)}${row - 1}`);
-    }
-
-    //! EAT MOVEMENT
-    if (col + 1 <= 104 || col - 1 >= 97) {
-      if (
-        boxesWithPieces.includes(`${String.fromCharCode(col + 1)}${row - 1}`)
-      ) {
-        possibleMoves.push(`${String.fromCharCode(col + 1)}${row - 1}`);
-        canEat = true;
-      }
-      if (
-        boxesWithPieces.includes(`${String.fromCharCode(col - 1)}${row - 1}`)
-      ) {
-        possibleMoves.push(`${String.fromCharCode(col - 1)}${row - 1}`);
-        canEat = true;
-      }
+  if (
+    forwardOne >= 1 &&
+    forwardOne <= 8 &&
+    board[`${String.fromCharCode(col)}${forwardOne}`] === null
+  ) {
+    possibleMoves.push(`${String.fromCharCode(col)}${forwardOne}`);
+    if (
+      row === startAt &&
+      board[`${String.fromCharCode(col)}${forwardTwo}`] === null
+    ) {
+      possibleMoves.push(`${String.fromCharCode(col)}${forwardTwo}`);
     }
   }
-  return [possibleMoves, canEat];
+
+  [-1, 1].forEach((offset) => {
+    const diagBox = col + offset;
+    const target = board[`${String.fromCharCode(diagBox)}${forwardOne}`];
+
+    if (diagBox >= 97 && diagBox <= 104 && target !== null) {
+      if (color !== getPieceColor(target)) {
+        possibleMoves.push(`${String.fromCharCode(diagBox)}${forwardOne}`);
+        canEat = true;
+      }
+    }
+  });
+
+  return possibleMoves;
 }
 
-export { PawnMovement };
+function RookMovement(
+  currentPos: string,
+  color: 'white' | 'black',
+  board: Record<string, Piece>
+): string[] {
+  const row = Number(currentPos[1]); // Y coordinate as a number
+  const col = currentPos.charCodeAt(0); // X coordinate as ASCII code
+  const direction = color === 'white' ? 1 : -1;
+
+  let possibleMoves: string[] = [];
+
+  for (let i = 1; i <= 8; i++) {
+    if (board[`${String.fromCharCode(col)}${row + i}`] !== null) break;
+    if (board[`${String.fromCharCode(col)}${row + i}`] === null) {
+      possibleMoves.push(`${String.fromCharCode(col)}${row + i}`);
+    }
+  }
+
+  return possibleMoves;
+}
+
+function getPieceColor(piece: Piece): 'white' | 'black' | null {
+  if (!piece) return null;
+  return piece.endsWith('w') ? 'white' : 'black';
+}
+
+export { PawnMovement, RookMovement };
