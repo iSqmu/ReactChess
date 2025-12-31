@@ -20,13 +20,20 @@ const Chessboard = () => {
   });
 
   return (
-    <div className="h-dvh flex flex-col items-center justify-center">
+    <div
+      className={clsx(
+        'h-dvh flex flex-col items-center justify-center transition-all duration-200 ',
+        currentPlayer === 'white'
+          ? 'bg-gray-200 text-gray-800'
+          : 'bg-gray-600 text-gray-200'
+      )}
+    >
       <div className="flex">
         <div className="flex flex-col justify-between">
           {cols.map((num) => (
             <div
               key={num}
-              className="h-12 w-12 flex items-center justify-center text-gray-600 font-medium"
+              className="h-12 w-12 flex items-center justify-center font-medium"
             >
               {num}
             </div>
@@ -44,7 +51,7 @@ const Chessboard = () => {
               <div
                 key={box}
                 className={clsx(
-                  'h-12 w-12 flex items-center justify-center cursor-pointer transition-all duration-200',
+                  'h-12 w-12 flex items-center justify-center cursor-pointer transition-all duration-500',
                   isDark ? 'bg-sky-800' : 'bg-sky-200',
                   'hover:scale-110 hover:rounded-lg hover:shadow-2xl',
                   isSelected &&
@@ -62,11 +69,11 @@ const Chessboard = () => {
         </div>
       </div>
 
-      <div className="flex mt-2">
+      <div className="flex mt-2 ml-10">
         {rows.map((row) => (
           <div
             key={row}
-            className="w-12 h-10 flex items-center justify-center text-gray-600 font-medium"
+            className="w-12 h-10 flex items-center justify-center font-medium"
           >
             {row.toUpperCase()}
           </div>
@@ -74,7 +81,7 @@ const Chessboard = () => {
       </div>
 
       <div className="mt-6 text-xl font-semibold">
-        Turno de: {currentPlayer === 'white' ? 'Blancas' : 'Negras'}
+        Turno de las {currentPlayer === 'white' ? 'Blancas' : 'Negras'}
       </div>
     </div>
   );
