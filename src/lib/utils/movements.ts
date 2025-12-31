@@ -2,7 +2,7 @@ function PawnMovement(
   currentPos: string,
   color: 'white' | 'black',
   boxesWithPieces: Array<string>
-) {
+) : [string[], boolean] {
   const row = Number(currentPos[1]); // Y coordinate as a number
   const col = currentPos.charCodeAt(0); // X coordinate as ASCII code
 

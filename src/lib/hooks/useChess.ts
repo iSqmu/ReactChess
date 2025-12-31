@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { PawnMovement } from '@lib/utils/movements';
 import type { Piece, Box, Board, Player } from './types';
 import initialBoard from '@lib/constants/initialBoard.json';
+import dataPieces from '@lib/constants/data.pieces.json';
 
 export function useChess() {
   const [board, setBoard] = useState<Board>(initialBoard as unknown as Board);
@@ -11,11 +12,11 @@ export function useChess() {
   const [selectedPiece, setSelectedPiece] = useState<Piece | null>(null);
 
   function getPiece(box: Box) {
-    const boardBox = initialBoard.board[box as keyof typeof initialBoard.board];
+    const boardBox = initialBoard[box as keyof typeof initialBoard];
     if (boardBox !== null) {
-      return initialBoard.pieces[
-        boardBox[0] as keyof typeof initialBoard.pieces
-      ][boardBox[1] === 'w' ? 0 : 1];
+      return dataPieces[boardBox[0] as keyof typeof dataPieces][
+        boardBox[1] === 'w' ? 0 : 1
+      ];
     } else {
       return null;
     }
@@ -27,9 +28,9 @@ export function useChess() {
   }
 
   function handleBoxClick(box: Box) {
-    let enemiePieces = Object.keys(board.board).filter(
-      (box) =>
-        board.board[box] !== null && board.board[box][1] !== currentPlayer[0]
+    let enemiePieces = Object.keys(board).filter(
+      // ! No overload matches this call
+      (box) => board[box] !== null && board[box][1] !== currentPlayer[0]
     );
 
     const piece = getPiece(box);
@@ -44,20 +45,20 @@ export function useChess() {
         }
 
         setSelectedBox(box);
-        setSelectedPiece(board.board[box]);
+        setSelectedPiece(board[box]);
       }
 
       if (selectedBox === box) {
         setSelectedBox(null);
         setPossibleSelect([]);
       }
-    } else if (possibleSelect.includes(box) && selectedPiece) {
+    } else if (possibleSelect.includes(box) && selectedPiece && selectedBox) {
       console.log(`Moving ${selectedPiece} to ${box}`);
 
       setBoard((prevBoard) => {
         const newBoard = { ...prevBoard };
-        newBoard.board[box] = selectedPiece;
-        newBoard.board[selectedBox] = null;
+        newBoard[box] = selectedPiece;
+        newBoard[selectedBox] = null;
         return newBoard;
       });
       setSelectedBox(null);
@@ -68,13 +69,14 @@ export function useChess() {
     if (
       possibleSelect.includes(box) &&
       enemiePieces.includes(box) &&
-      selectedPiece
+      selectedPiece &&
+      selectedBox
     ) {
       setBoard((prevBoard) => {
         const newBoard = { ...prevBoard };
-        newBoard.board[box] = selectedPiece;
-        newBoard.board[selectedBox] = null;
-        console.log(`${selectedPiece} killed ${newBoard.board[box]}`);
+        newBoard[box] = selectedPiece;
+        newBoard[selectedBox] = null;
+        console.log(`${selectedPiece} killed ${newBoard[box]}`);
         return newBoard;
       });
       setSelectedBox(null);
