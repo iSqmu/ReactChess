@@ -1,0 +1,8 @@
+{
+  "k": ["white_king.png", "black_king.png"],
+  "q": ["white_queen.png", "black_queen.png"],
+  "r": ["white_rook.png", "black_rook.png"],
+  "b": ["white_bishop.png", "black_bishop.png"],
+  "n": ["white_knight.png", "black_knight.png"],
+  "p": ["white_pawn.png", "black_pawn.png"]
+}
