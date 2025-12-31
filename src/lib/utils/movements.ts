@@ -13,7 +13,6 @@ function PawnMovement(
   const forwardTwo = row + 2 * direction;
 
   let possibleMoves: string[] = [];
-  let canEat = false;
 
   if (
     forwardOne >= 1 &&
@@ -36,7 +35,6 @@ function PawnMovement(
     if (diagBox >= 97 && diagBox <= 104 && target !== null) {
       if (color !== getPieceColor(target)) {
         possibleMoves.push(`${String.fromCharCode(diagBox)}${forwardOne}`);
-        canEat = true;
       }
     }
   });
@@ -78,8 +76,6 @@ function RookMovement(
 
   return possibleMoves;
 }
-
-
 
 function getPieceColor(piece: Piece): 'white' | 'black' | null {
   if (!piece) return null;
