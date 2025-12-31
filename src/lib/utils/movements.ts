@@ -36,6 +36,32 @@ function PawnMovement(
       }
     }
   } else {
+    //! FORWARD MOVEMENT
+    if (row === 7) {
+      if (!boxesWithPieces.includes(`${String.fromCharCode(col)}5`)) {
+        possibleMoves.push(`${String.fromCharCode(col)}5`);
+      }
+    }
+
+    if (!boxesWithPieces.includes(`${String.fromCharCode(col)}${row - 1}`)) {
+      possibleMoves.push(`${String.fromCharCode(col)}${row - 1}`);
+    }
+
+    //! EAT MOVEMENT
+    if (col + 1 <= 104 || col - 1 >= 97) {
+      if (
+        boxesWithPieces.includes(`${String.fromCharCode(col + 1)}${row - 1}`)
+      ) {
+        possibleMoves.push(`${String.fromCharCode(col + 1)}${row - 1}`);
+        canEat = true;
+      }
+      if (
+        boxesWithPieces.includes(`${String.fromCharCode(col - 1)}${row - 1}`)
+      ) {
+        possibleMoves.push(`${String.fromCharCode(col - 1)}${row - 1}`);
+        canEat = true;
+      }
+    }
   }
   return [possibleMoves, canEat];
 }

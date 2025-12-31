@@ -9,7 +9,6 @@ export function useChess() {
   const [currentPlayer, setCurrentPlayer] = useState<Player>('white');
   const [possibleSelect, setPossibleSelect] = useState<Array<string>>([]);
   const [selectedPiece, setSelectedPiece] = useState<Piece | null>(null);
-  const [canEat, setCanEat] = useState<boolean>(false);
 
   function getPiece(box: Box) {
     const boardBox = initialBoard.board[box as keyof typeof initialBoard.board];
@@ -41,7 +40,6 @@ export function useChess() {
     } else if (piece) {
       if (pieceColor === currentPlayer) {
         if (piece && piece.includes('pawn') && pieceColor) {
-          setCanEat(PawnMovement(box, pieceColor, enemiePieces)[1]);
           setPossibleSelect(PawnMovement(box, pieceColor, enemiePieces)[0]);
         }
 
@@ -60,12 +58,28 @@ export function useChess() {
         const newBoard = { ...prevBoard };
         newBoard.board[box] = selectedPiece;
         newBoard.board[selectedBox] = null;
-        console.log(newBoard.board);
         return newBoard;
       });
       setSelectedBox(null);
       setPossibleSelect([]);
-      // setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
+      setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
+    }
+
+    if (
+      possibleSelect.includes(box) &&
+      enemiePieces.includes(box) &&
+      selectedPiece
+    ) {
+      setBoard((prevBoard) => {
+        const newBoard = { ...prevBoard };
+        newBoard.board[box] = selectedPiece;
+        newBoard.board[selectedBox] = null;
+        console.log(`${selectedPiece} killed ${newBoard.board[box]}`);
+        return newBoard;
+      });
+      setSelectedBox(null);
+      setPossibleSelect([]);
+      setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
     }
   }
 
