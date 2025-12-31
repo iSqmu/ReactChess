@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { PawnMovement, RookMovement } from '@lib/utils/movements';
 import type { Piece, Box, Board, Player } from './types';
 import initialBoard from '@lib/constants/initialBoard.json';
@@ -10,10 +10,6 @@ export function useChess() {
   const [currentPlayer, setCurrentPlayer] = useState<Player>('white');
   const [possibleSelect, setPossibleSelect] = useState<Array<string>>([]);
   const [selectedPiece, setSelectedPiece] = useState<Piece | null>(null);
-
-  useEffect(() => {
-    console.log(board);
-  }, [board]);
 
   function getPiece(box: Box) {
     const boardBox = board[box as keyof typeof board];
@@ -50,7 +46,6 @@ export function useChess() {
 
           if (piece.includes('rook')) {
             setPossibleSelect(RookMovement(box, pieceColor, board));
-            console.log(possibleSelect);
           }
         }
 

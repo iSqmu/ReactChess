@@ -56,14 +56,30 @@ function RookMovement(
   let possibleMoves: string[] = [];
 
   for (let i = 1; i <= 8; i++) {
-    if (board[`${String.fromCharCode(col)}${row + i}`] !== null) break;
-    if (board[`${String.fromCharCode(col)}${row + i}`] === null) {
-      possibleMoves.push(`${String.fromCharCode(col)}${row + i}`);
+    let target = board[`${String.fromCharCode(col)}${row + i * direction}`];
+    if (target !== null) {
+      if (getPieceColor(target) !== color) {
+        possibleMoves.push(`${String.fromCharCode(col)}${row + i * direction}`);
+      }
+      console.log(possibleMoves);
+      break;
+    }
+    if (target === null) {
+      possibleMoves.push(`${String.fromCharCode(col)}${row + i * direction}`);
+    }
+  }
+
+  for (let i = 1; i <= 8; i++) {
+    if (board[`${String.fromCharCode(col - i)}${row}`] !== null) break;
+    if (board[`${String.fromCharCode(col - i)}${row}`] === null) {
+      possibleMoves.push(`${String.fromCharCode(col - i)}${row}`);
     }
   }
 
   return possibleMoves;
 }
+
+
 
 function getPieceColor(piece: Piece): 'white' | 'black' | null {
   if (!piece) return null;
