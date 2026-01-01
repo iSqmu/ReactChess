@@ -3,6 +3,7 @@ import {
   PawnMovement,
   RookMovement,
   BishopMovement,
+  KnightMovement,
 } from '@lib/utils/movements';
 import type { Piece, Box, Board, Player } from './types';
 import initialBoard from '@lib/constants/initialBoard.json';
@@ -54,6 +55,10 @@ export function useChess() {
 
           if (piece.includes('bishop')) {
             setPossibleSelect(BishopMovement(box, pieceColor, board));
+          }
+
+          if (piece.includes('knight')) {
+            setPossibleSelect(KnightMovement(box, pieceColor, board));
           }
         }
 

@@ -77,11 +77,8 @@ function RookMovement(
       } else {
         possibleMoves.push(targetBox);
       }
-
-      console.log(`${String.fromCharCode(newCol)}${newRow}`);
     }
   }
-  console.log(possibleMoves);
   return possibleMoves;
 }
 
@@ -109,6 +106,9 @@ function BishopMovement(
       const targetBox = `${String.fromCharCode(newCol)}${newRow}`;
       const targetPiece = board[targetBox];
 
+      if (newCol < 97 || newCol > 104 || newRow < 1 || newRow > 8) {
+        break;
+      }
       if (targetPiece !== null) {
         if (getPieceColor(targetPiece) !== color) {
           possibleMoves.push(targetBox);
@@ -123,9 +123,56 @@ function BishopMovement(
   return possibleMoves;
 }
 
+function KnightMovement(
+  currentPos: string,
+  color: 'white' | 'black',
+  board: Record<string, Piece>
+): string[] {
+  const possibleMoves: string[] = [];
+  const col = currentPos.charCodeAt(0);
+  const row = Number(currentPos[1]);
+
+  const directions = [
+    [1, 2], // right forward
+    [-1, 2], // left forward
+    [1, -2], // right backward
+    [-1, -2], // left backward
+    [2, 1], // forward left
+    [-2, 1], // forward right
+    [-2, -1], // backward right
+    [2, -1], // backward left
+  ];
+
+  for (const [x, y] of directions) {
+    for (let i = 1; i <= 4; i++) {
+      const newCol = col + x * i;
+      const newRow = row + y * i;
+
+      const targetBox = `${String.fromCharCode(newCol)}${newRow}`;
+      console.log(targetBox);
+      const targetPiece = board[targetBox];
+
+      if (newCol < 97 || newCol > 104 || newRow < 1 || newRow > 8) {
+        break;
+      }
+
+      if (targetPiece !== null) {
+        if (getPieceColor(targetPiece) !== color) {
+          possibleMoves.push(targetBox);
+        }
+      } else {
+        possibleMoves.push(targetBox);
+      }
+      break;
+    }
+  }
+
+  return possibleMoves;
+}
+
 function getPieceColor(piece: Piece): 'white' | 'black' | null {
   if (!piece) return null;
   return piece.endsWith('w') ? 'white' : 'black';
 }
 
-export { PawnMovement, RookMovement, BishopMovement };
+export { PawnMovement, RookMovement, BishopMovement, KnightMovement };
