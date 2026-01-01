@@ -183,6 +183,53 @@ function QueenMovement(
   return possibleMoves;
 }
 
+function KingMovement(
+  currentPos: string,
+  color: 'white' | 'black',
+  board: Record<string, Piece>
+): string[] {
+  const possibleMoves: string[] = [];
+  const col = currentPos.charCodeAt(0);
+  const row = Number(currentPos[1]);
+
+  const directions = [
+    [1, 0], // right
+    [-1, 0], // left
+    [0, 1], // forward
+    [0, -1], // backward
+    [1, 1], // right forward
+    [-1, 1], // left forward
+    [-1, -1], // left backward
+    [1, -1], // right backward
+  ];
+
+  for (const [x, y] of directions) {
+    for (let i = 1; i <= directions.length; i++) {
+      const newCol = col + x * i;
+      const newRow = row + y * i;
+
+      const targetBox = `${String.fromCharCode(newCol)}${newRow}`;
+      const targetPiece = board[targetBox];
+
+      if (newCol < 97 || newCol > 104 || newRow < 1 || newRow > 8) {
+        break;
+      }
+
+      if (targetPiece !== null) {
+        if (getPieceColor(targetPiece) !== color) {
+          possibleMoves.push(targetBox);
+        }
+        break;
+      } else {
+        possibleMoves.push(targetBox);
+      }
+      break;
+    }
+  }
+
+  return possibleMoves;
+}
+
 function getPieceColor(piece: Piece): 'white' | 'black' | null {
   if (!piece) return null;
   return piece.endsWith('w') ? 'white' : 'black';
@@ -194,4 +241,5 @@ export {
   BishopMovement,
   QueenMovement,
   KnightMovement,
+  KingMovement,
 };

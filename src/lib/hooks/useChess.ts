@@ -5,6 +5,7 @@ import {
   BishopMovement,
   KnightMovement,
   QueenMovement,
+  KingMovement,
 } from '@lib/utils/movements';
 import type { Piece, Box, Board, Player } from './types';
 import initialBoard from '@lib/constants/initialBoard.json';
@@ -65,6 +66,10 @@ export function useChess() {
           if (piece.includes('queen')) {
             setPossibleSelect(QueenMovement(box, pieceColor, board));
           }
+
+          if (piece.includes('king')) {
+            setPossibleSelect(KingMovement(box, pieceColor, board));
+          }
         }
 
         setSelectedBox(box);
@@ -87,7 +92,7 @@ export function useChess() {
 
       setSelectedBox(null);
       setPossibleSelect([]);
-      // setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
+      setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
     }
 
     if (
@@ -105,7 +110,7 @@ export function useChess() {
       });
       setSelectedBox(null);
       setPossibleSelect([]);
-      // setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
+      setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
     }
   }
 
