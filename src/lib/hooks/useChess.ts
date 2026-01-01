@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { PawnMovement, RookMovement } from '@lib/utils/movements';
+import {
+  PawnMovement,
+  RookMovement,
+  BishopMovement,
+} from '@lib/utils/movements';
 import type { Piece, Box, Board, Player } from './types';
 import initialBoard from '@lib/constants/initialBoard.json';
 import dataPieces from '@lib/constants/data.pieces.json';
@@ -46,6 +50,10 @@ export function useChess() {
 
           if (piece.includes('rook')) {
             setPossibleSelect(RookMovement(box, pieceColor, board));
+          }
+
+          if (piece.includes('bishop')) {
+            setPossibleSelect(BishopMovement(box, pieceColor, board));
           }
         }
 

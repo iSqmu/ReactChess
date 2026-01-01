@@ -60,8 +60,8 @@ function RookMovement(
 
   for (const [x, y] of directions) {
     for (let i = 1; i <= 8; i++) {
-      let newCol = col + x * i;
-      let newRow = row + y * i;
+      const newCol = col + x * i;
+      const newRow = row + y * i;
 
       const targetBox = `${String.fromCharCode(newCol)}${newRow}`;
       const targetPiece = board[targetBox];
@@ -93,8 +93,33 @@ function BishopMovement(
   const possibleMoves: string[] = [];
   const col = currentPos.charCodeAt(0);
   const row = Number(currentPos[1]);
+  const directions = [
+    [1, 1],
+    [1, -1],
+    [-1, 1],
+    [-1, -1],
+    [0, -1],
+  ];
 
-  for (let i = 1; i <= 8; i++) {}
+  for (const [x, y] of directions) {
+    for (let i = 1; i <= 8; i++) {
+      const newCol = col + x * i;
+      const newRow = row + y * i;
+
+      const targetBox = `${String.fromCharCode(newCol)}${newRow}`;
+      const targetPiece = board[targetBox];
+
+      if (targetPiece !== null) {
+        if (getPieceColor(targetPiece) !== color) {
+          possibleMoves.push(targetBox);
+        }
+        break;
+      } else {
+        possibleMoves.push(targetBox);
+      }
+    }
+  }
+
   return possibleMoves;
 }
 
@@ -103,4 +128,4 @@ function getPieceColor(piece: Piece): 'white' | 'black' | null {
   return piece.endsWith('w') ? 'white' : 'black';
 }
 
-export { PawnMovement, RookMovement };
+export { PawnMovement, RookMovement, BishopMovement };
