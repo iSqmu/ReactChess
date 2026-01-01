@@ -69,7 +69,7 @@ export function useChess() {
 
       setSelectedBox(null);
       setPossibleSelect([]);
-      setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
+      // setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
     }
 
     if (
@@ -87,7 +87,7 @@ export function useChess() {
       });
       setSelectedBox(null);
       setPossibleSelect([]);
-      setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
+      // setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
     }
   }
 

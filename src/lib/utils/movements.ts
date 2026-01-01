@@ -49,31 +49,52 @@ function RookMovement(
 ): string[] {
   const row = Number(currentPos[1]); // Y coordinate as a number
   const col = currentPos.charCodeAt(0); // X coordinate as ASCII code
-  const direction = color === 'white' ? 1 : -1;
 
-  let possibleMoves: string[] = [];
+  const possibleMoves: string[] = [];
+  const directions = [
+    [0, 1], // abajo -> arriba
+    [0, -1], // arriba -> abajo
+    [1, 0], // derecha -> izquierda
+    [-1, 0], // izquierda -> derecha
+  ];
 
-  for (let i = 1; i <= 8; i++) {
-    let target = board[`${String.fromCharCode(col)}${row + i * direction}`];
-    if (target !== null) {
-      if (getPieceColor(target) !== color) {
-        possibleMoves.push(`${String.fromCharCode(col)}${row + i * direction}`);
+  for (const [x, y] of directions) {
+    for (let i = 1; i <= 8; i++) {
+      let newCol = col + x * i;
+      let newRow = row + y * i;
+
+      const targetBox = `${String.fromCharCode(newCol)}${newRow}`;
+      const targetPiece = board[targetBox];
+      if (newCol < 97 || newCol > 104 || newRow < 1 || newRow > 8) {
+        break;
       }
-      console.log(possibleMoves);
-      break;
-    }
-    if (target === null) {
-      possibleMoves.push(`${String.fromCharCode(col)}${row + i * direction}`);
+
+      if (targetPiece !== null) {
+        if (getPieceColor(targetPiece) !== color) {
+          possibleMoves.push(targetBox);
+        }
+        break;
+      } else {
+        possibleMoves.push(targetBox);
+      }
+
+      console.log(`${String.fromCharCode(newCol)}${newRow}`);
     }
   }
+  console.log(possibleMoves);
+  return possibleMoves;
+}
 
-  for (let i = 1; i <= 8; i++) {
-    if (board[`${String.fromCharCode(col - i)}${row}`] !== null) break;
-    if (board[`${String.fromCharCode(col - i)}${row}`] === null) {
-      possibleMoves.push(`${String.fromCharCode(col - i)}${row}`);
-    }
-  }
+function BishopMovement(
+  currentPos: string,
+  color: 'white' | 'black',
+  board: Record<string, Piece>
+): string[] {
+  const possibleMoves: string[] = [];
+  const col = currentPos.charCodeAt(0);
+  const row = Number(currentPos[1]);
 
+  for (let i = 1; i <= 8; i++) {}
   return possibleMoves;
 }
 
