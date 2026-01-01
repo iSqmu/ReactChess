@@ -170,9 +170,28 @@ function KnightMovement(
   return possibleMoves;
 }
 
+function QueenMovement(
+  currentPos: string,
+  color: 'white' | 'black',
+  board: Record<string, Piece>
+): string[] {
+  const possibleMoves: string[] = [];
+  const bishopMoves = BishopMovement(currentPos, color, board);
+  const rookMoves = RookMovement(currentPos, color, board);
+  possibleMoves.push(...bishopMoves, ...rookMoves);
+
+  return possibleMoves;
+}
+
 function getPieceColor(piece: Piece): 'white' | 'black' | null {
   if (!piece) return null;
   return piece.endsWith('w') ? 'white' : 'black';
 }
 
-export { PawnMovement, RookMovement, BishopMovement, KnightMovement };
+export {
+  PawnMovement,
+  RookMovement,
+  BishopMovement,
+  QueenMovement,
+  KnightMovement,
+};
