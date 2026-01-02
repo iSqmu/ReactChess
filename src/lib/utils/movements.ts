@@ -65,6 +65,7 @@ function RookMovement(
 
       const targetBox = `${String.fromCharCode(newCol)}${newRow}`;
       const targetPiece = board[targetBox];
+
       if (newCol < 97 || newCol > 104 || newRow < 1 || newRow > 8) {
         break;
       }
@@ -95,7 +96,6 @@ function BishopMovement(
     [1, -1],
     [-1, 1],
     [-1, -1],
-    [0, -1],
   ];
 
   for (const [x, y] of directions) {
@@ -149,7 +149,6 @@ function KnightMovement(
       const newRow = row + y * i;
 
       const targetBox = `${String.fromCharCode(newCol)}${newRow}`;
-      console.log(targetBox);
       const targetPiece = board[targetBox];
 
       if (newCol < 97 || newCol > 104 || newRow < 1 || newRow > 8) {
@@ -230,6 +229,54 @@ function KingMovement(
   return possibleMoves;
 }
 
+function isInCheck(
+  kingColor: 'white' | 'black',
+  board: Record<string, Piece>,
+  kingPosition?: string
+): boolean {
+  let opponentColor = kingColor === 'white' ? 'black' : 'white';
+  let kingPos = kingPosition;
+
+  if (!kingPos) {
+    for (let box in board) {
+      let piece = board[box];
+      if (piece === `k${kingColor === 'white' ? 'w' : 'b'}`) {
+        kingPos = box;
+        break;
+      }
+    }
+  }
+
+  for (let box in board) {
+    const piece = board[box];
+    if (!piece) continue;
+    const pieceColor = getPieceColor(piece);
+
+    if (pieceColor !== opponentColor) continue;
+
+    let possibleAttacks: string[] = [];
+
+    if (piece.includes('p')) {
+      possibleAttacks = PawnMovement(box, pieceColor, board);
+    } else if (piece.includes('r')) {
+      possibleAttacks = RookMovement(box, pieceColor, board);
+    } else if (piece.includes('b')) {
+      possibleAttacks = BishopMovement(box, pieceColor, board);
+    } else if (piece.includes('n')) {
+      possibleAttacks = KnightMovement(box, pieceColor, board);
+    } else if (piece.includes('q')) {
+      possibleAttacks = QueenMovement(box, pieceColor, board);
+    } else if (piece.includes('k')) {
+      possibleAttacks = KingMovement(box, pieceColor, board);
+    }
+
+    if (possibleAttacks.includes(kingPos!)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function getPieceColor(piece: Piece): 'white' | 'black' | null {
   if (!piece) return null;
   return piece.endsWith('w') ? 'white' : 'black';
@@ -242,4 +289,5 @@ export {
   QueenMovement,
   KnightMovement,
   KingMovement,
+  isInCheck,
 };

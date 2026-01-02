@@ -6,6 +6,7 @@ import {
   KnightMovement,
   QueenMovement,
   KingMovement,
+  isInCheck,
 } from '@lib/utils/movements';
 import type { Piece, Box, Board, Player } from './types';
 import initialBoard from '@lib/constants/initialBoard.json';
@@ -35,10 +36,6 @@ export function useChess() {
   }
 
   function handleBoxClick(box: Box) {
-    let enemiePieces = Object.keys(board).filter(
-      (box) => board[box] !== null && board[box][1] !== currentPlayer[0]
-    );
-
     const piece = getPiece(box);
     const pieceColor = getPieceColor(piece);
 
@@ -80,37 +77,41 @@ export function useChess() {
         setSelectedBox(null);
         setPossibleSelect([]);
       }
-    } else if (possibleSelect.includes(box) && selectedPiece && selectedBox) {
-      console.log(`Moving ${selectedPiece} to ${box}`);
-
-      setBoard((prevBoard) => {
-        const newBoard = { ...prevBoard };
-        newBoard[box] = selectedPiece;
-        newBoard[selectedBox] = null;
-        return newBoard;
-      });
-
-      setSelectedBox(null);
-      setPossibleSelect([]);
-      setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
     }
 
-    if (
-      possibleSelect.includes(box) &&
-      enemiePieces.includes(box) &&
-      selectedPiece &&
-      selectedBox
-    ) {
+    if (possibleSelect.includes(box) && selectedPiece) {
       setBoard((prevBoard) => {
         const newBoard = { ...prevBoard };
         newBoard[box] = selectedPiece;
-        newBoard[selectedBox] = null;
-        console.log(`${selectedPiece} killed ${newBoard[box]}`);
-        return newBoard;
+        newBoard[selectedBox!] = null;
+
+        const ownKingInCheck = isInCheck(currentPlayer, newBoard);
+        const enemyKingInCheck = isInCheck(
+          currentPlayer === 'white' ? 'black' : 'white',
+          newBoard
+        );
+
+        if (enemyKingInCheck) {
+          console.log(
+            currentPlayer,
+            ' check to ',
+            currentPlayer === 'white' ? 'black' : 'white'
+          );
+        }
+
+        if (ownKingInCheck) {
+          console.log('¡Movimiento ilegal! Deja al rey propio en jaque.');
+          setSelectedBox(null);
+          setPossibleSelect([]);
+          return prevBoard;
+        } else {
+          setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
+          return newBoard;
+        }
       });
+
       setSelectedBox(null);
       setPossibleSelect([]);
-      setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
     }
   }
 
